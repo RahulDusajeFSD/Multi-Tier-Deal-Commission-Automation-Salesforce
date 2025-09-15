@@ -12,3 +12,6 @@ trigger DealTrigger on Deal__c (before insert,after insert,after update) {
     dealTriggerHandler.afterUpdate(Trigger.new, Trigger.oldMap);
 
 }
+
+
+

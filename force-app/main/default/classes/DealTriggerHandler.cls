@@ -24,4 +24,6 @@ public with sharing class DealTriggerHandler {
         List<Deal__c> deals = (List<Deal__c>)newList;
         CommissionService.processCommissions(deals, oldMap);
     }
+
+
 }
