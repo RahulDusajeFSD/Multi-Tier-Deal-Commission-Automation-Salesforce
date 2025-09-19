@@ -18,7 +18,7 @@ public with sharing class CommissionService {
                 Name = deal.Name + ' - commission_log - ' + System.now(),
                 Deal__c = deal.Id,
                 Sales_Rep__c = deal.Assigned_To__c,
-                Amount__c = deal.Amount__c,
+                Amount__c = deal.Amount__c * rate,
                 Rate__c = rate
                 ));
             }
