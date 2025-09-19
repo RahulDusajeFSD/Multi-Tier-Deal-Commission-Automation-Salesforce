@@ -8,6 +8,26 @@ public with sharing class ApprovalService {
 
 
         List<Approval_Log__c> logs = new List<Approval_Log__c>();
+
+
+
+        // Adding changes below to get all users and then filter as per Required Level
+        Map<String, Id> userMap = new Map<String, Id>();  // String for user.Title and Id for user.id
+
+        List<User> users = [Select Id, Name, Title from User];
+
+    
+        for(User user: users){
+            if(!userMap.containsKey(user.Title))
+            userMap.put(user.Title, user.Id);
+
+        }
+        // above changes for to get all users and then filter as per Required Level
+
+
+
+
+
         for(Deal__c deal: deals){
             // Query approval rules from metadata
 
@@ -22,7 +42,9 @@ public with sharing class ApprovalService {
                 logs.add(new Approval_Log__c(
                 Name = deal.Name + ' - approval_log - ' + System.now(),
                 Deal__c = deal.Id,
-                Approver__c = getApprover(rule.Required_Level__c),
+               // Approver__c = getApprover(rule.Required_Level__c),
+
+               Approver__c =  userMap.get(rule.Required_Level__c), // Added as part to reduce SOQL....
                 Level__c = rule.Required_Level__c,
                 Is_Approved__c = false, // New - To mark the deal initially unapproved 
                 Approved_Date__c = null
@@ -33,16 +55,16 @@ public with sharing class ApprovalService {
         insert logs;
     }
 
-    private static Id getapprover(String level){
+    // private static Id getapprover(String level){
 
-        List<User> user = [Select Id, Name from User where Title =:level Limit 1]; // get user id of the Rerquired Approver.
-        // This will be tagged with the record.
-        System.debug('LOG-TWO');
-        if(user.isEmpty())
-        return null;  
+    //     List<User> user = [Select Id, Name from User where Title =:level Limit 1]; // get user id of the Rerquired Approver.
+    //     // This will be tagged with the record.
+    //     System.debug('LOG-TWO');
+    //     if(user.isEmpty())
+    //     return null;  
 
-        return user[0].Id;
-    }
+    //     return user[0].Id;
+    // }
 
 
     
